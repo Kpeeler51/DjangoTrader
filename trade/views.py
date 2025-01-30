@@ -26,12 +26,32 @@ def home(request):
             'prices': json.dumps(prices),
             'currency': currency,
         }
-        
+
+        if request.user.is_authenticated:
+            context['username'] = request.user.username
+            if hasattr(request.user, 'profile'):
+                context['balance'] = request.user.profile.balance
+            else:
+                context['balance'] = "Profile not found"
+        else:
+            context['username'] = "Anonymous"
+            context['balance'] = "Not logged in"
+
     except Exception as e:
         logger.error(f"Error fetching stock data: {str(e)}")
         context = {
             'symbol': symbol,
-            'error': 'Unable to fetch stock data'
+            'error': 'Unable to fetch stock data',
         }
+        
+        if request.user.is_authenticated:
+            context['username'] = request.user.username
+            if hasattr(request.user, 'profile'):
+                context['balance'] = request.user.profile.balance
+            else:
+                context['balance'] = "Profile not found"
+        else:
+            context['username'] = "Anonymous"
+            context['balance'] = "Not logged in"
     
     return render(request, 'trade/home.html', context)

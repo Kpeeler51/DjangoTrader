@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DjangoTrader{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="{% static 'chart.js' %}"></script>
+</head>
+<body>
+    <h1>DjangoTrader</h1>
+    
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}!
+        {% if user.profile %}
+            Your balance: ${{ user.profile.balance }}
+        {% endif %}
+        </p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
