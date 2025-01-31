@@ -1,0 +1,33 @@
+{% extends "trade/base.html" %}
+
+{% block content %}
+<h2>Your Portfolio</h2>
+<p>Total Value: ${{ total_value|floatformat:2 }}</p>
+<p>Cash Balance: ${{ balance|floatformat:2 }}</p>
+<h3>Positions:</h3>
+<table>
+    <tr>
+        <th>Symbol</th>
+        <th>Quantity</th>
+        <th>Current Price</th>
+        <th>Total Value</th>
+        <th>Actions</th>
+    </tr>
+    {% for position in portfolio %}
+    <tr>
+        <td>{{ position.symbol }}</td>
+        <td>{{ position.quantity }}</td>
+        <td>${{ position.current_price|floatformat:2 }}</td>
+        <td>${{ position.total_value|floatformat:2 }}</td>
+        <td>
+            <form method="post" action="{% url 'sell_stock' %}">
+                {% csrf_token %}
+                <input type="hidden" name="symbol" value="{{ position.symbol }}">
+                <input type="number" name="quantity" min="1" max="{{ position.quantity }}" required>
+                <button type="submit">Sell</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
