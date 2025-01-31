@@ -26,8 +26,16 @@ class Trade(models.Model):
     trade_type = models.CharField(max_length=4, choices=TRADE_TYPES)
 
     def __str__(self):
-        return f"{self.get_trade_type_display()} {self.quantity} shares of {self.symbol} at ${self.price} by {self.user.username}"
+        return f"{self.trade_type} {self.quantity} {self.symbol} at ${self.price} by {self.user.username}"
 
-    @property
-    def total_value(self):
-        return Decimal(self.quantity) * self.price
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from accounts.models import Transaction
+        amount = self.quantity * self.price
+        if self.trade_type == 'SELL':
+            amount = -amount
+        Transaction.objects.create(
+            user=self.user,
+            amount=amount,
+            transaction_type='TRADE'
+        )

@@ -19,8 +19,25 @@ class Profile(models.Model):
             raise ValidationError("Deposit would exceed maximum allowed balance.")
         self.balance += amount
         self.save()
-        Transaction.objects.create(user=self.user, amount=amount)
+        Transaction.objects.create(user=self.user, amount=amount, transaction_type='DEPOSIT')
 
+    def add_trade_transaction(self, symbol, quantity, price, trade_type):
+        amount = Decimal(quantity) * Decimal(price)
+        if trade_type == 'BUY':
+            if self.balance < amount:
+                raise ValidationError("Insufficient funds for this purchase.")
+            self.balance -= amount
+        elif trade_type == 'SELL':
+            self.balance += amount
+        self.save()
+        Transaction.objects.create(
+            user=self.user,
+            transaction_type=f'STOCK_{trade_type}',
+            amount=amount,
+            symbol=symbol,
+            quantity=quantity,
+            price=price
+        )
 
     def get_transactions(self):
         return Transaction.objects.filter(user=self.user).order_by('-timestamp')
@@ -40,9 +57,18 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class Transaction(models.Model):
+    TRANSACTION_TYPES = [
+        ('DEPOSIT', 'Deposit'),
+        ('STOCK_BUY', 'Stock Buy'),
+        ('STOCK_SELL', 'Stock Sell'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
+    transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES, default='DEPOSIT')
+    symbol = models.CharField(max_length=10, null=True, blank=True)
+    quantity = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
-        return f"Deposit of ${self.amount} by {self.user.username}"
+        return f"{self.get_transaction_type_display()} of ${self.amount} by {self.user.username}"

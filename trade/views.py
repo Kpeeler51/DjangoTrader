@@ -8,6 +8,7 @@ from decimal import Decimal
 from django.db import transaction
 from .models import StockPosition, Trade
 from accounts.views import get_user_balance
+from accounts.models import Transaction
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ def get_current_price(symbol):
         raise ValueError(f"Unable to fetch current price for {symbol}. Error: {str(e)}")
     
 def home(request):
-    symbol = request.GET.get('symbol', 'BTC')
+    symbol = request.GET.get('symbol', 'BTC-USD')
     logger.debug(f"Fetching data for symbol: {symbol}")
     
     try:
@@ -87,17 +88,23 @@ def buy_stock(request):
             profile.save()
 
             # Update or create stock position
-            position, created = StockPosition.objects.get_or_create(user=request.user, symbol=symbol)
-            position.quantity += quantity
-            position.save()
-
-            # Create trade record
-            Trade.objects.create(
+            position, created = StockPosition.objects.get_or_create(
                 user=request.user,
                 symbol=symbol,
+                defaults={'quantity': quantity}
+            )
+            if not created:
+                position.quantity += quantity
+                position.save()
+
+            # Create transaction record
+            Transaction.objects.create(
+                user=request.user,
+                amount=total_cost,
+                transaction_type='STOCK_BUY',
+                symbol=symbol,
                 quantity=quantity,
-                price=current_price,
-                trade_type='BUY'
+                price=current_price
             )
 
             messages.success(request, f'Successfully bought {quantity} shares of {symbol} at ${current_price} per share')
@@ -137,13 +144,14 @@ def sell_stock(request):
             else:
                 position.save()
 
-            # Create trade record
-            Trade.objects.create(
+            # Create transaction record
+            Transaction.objects.create(
                 user=request.user,
+                amount=total_value,
+                transaction_type='STOCK_SELL',
                 symbol=symbol,
                 quantity=quantity,
-                price=current_price,
-                trade_type='SELL'
+                price=current_price
             )
 
             messages.success(request, f'Successfully sold {quantity} shares of {symbol} at ${current_price} per share')
