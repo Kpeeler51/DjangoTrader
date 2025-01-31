@@ -35,11 +35,11 @@
 
     <p>Current Price: {{ currency }} {{ current_price }}</p>
 
+
     <h3>Buy Stock</h3>
     <form method="post" action="{% url 'buy_stock' %}">
         {% csrf_token %}
-        <input type="hidden" name="symbol" value="{{ symbol }}">
-        <h3>{{ symbol }}</h3>
+        <input type="text" name="symbol" value="{{ symbol }}" required>
         <input type="number" name="quantity" min="1" placeholder="Quantity" required>
         <button type="submit">Buy Stock</button>
     </form>
