@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import DepositForm
+from django.core.exceptions import ValidationError
 
 def register(request):
     if request.method == 'POST':
@@ -22,9 +23,12 @@ def deposit(request):
         form = DepositForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            request.user.profile.deposit(amount)
-            messages.success(request, f'Successfully deposited ${amount:.2f}')
-            return redirect('balance')
+            try:
+                request.user.profile.deposit(amount)
+                messages.success(request, f'Successfully deposited ${amount:.2f}')
+                return redirect('balance')
+            except ValidationError as e:
+                messages.error(request, str(e))
     else:
         form = DepositForm()
     
