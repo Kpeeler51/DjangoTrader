@@ -34,14 +34,59 @@
     {% endif %}
 
     <p>Current Price: {{ currency }} {{ current_price }}</p>
-    <h2>Buy {{ symbol }}</h2>
+
+    <h3>Buy Stock</h3>
     <form method="post" action="{% url 'buy_stock' %}">
         {% csrf_token %}
         <input type="hidden" name="symbol" value="{{ symbol }}">
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" min="1" required>
-        <button type="submit">Buy</button>
+        <h3>{{ symbol }}</h3>
+        <input type="number" name="quantity" min="1" placeholder="Quantity" required>
+        <button type="submit">Buy Stock</button>
     </form>
-    
-    <a href="{% url 'portfolio' %}">View Portfolio</a>
-    {% endblock %}
+
+    <h2>Your Portfolio</h2>
+    {% if portfolio %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Quantity</th>
+                    <th>Current Price</th>
+                    <th>Total Value</th>
+                    <th>Buy</th>
+                    <th>Sell</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for position in portfolio %}
+                    <tr>
+                        <td>{{ position.symbol }}</td>
+                        <td>{{ position.quantity }}</td>
+                        <td>${{ position.current_price }}</td>
+                        <td>${{ position.total_value }}</td>
+                        <td>
+                            <form method="post" action="{% url 'buy_stock' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="symbol" value="{{ position.symbol }}">
+                                <input type="number" name="quantity" min="1" required>
+                                <button type="submit">Buy</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'sell_stock' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="symbol" value="{{ position.symbol }}">
+                                <input type="number" name="quantity" min="1" max="{{ position.quantity }}" required>
+                                <button type="submit">Sell</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total Portfolio Value: ${{ portfolio_value }}</p>
+        <p>Total Account Value (Balance + Portfolio): ${{ total_value }}</p>
+    {% else %}
+        <p>You don't have any positions yet.</p>
+    {% endif %}
+{% endblock %}

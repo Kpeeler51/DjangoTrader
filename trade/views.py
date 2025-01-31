@@ -45,6 +45,26 @@ def home(request):
 
         currency = stock.info.get('currency', 'USD')
         current_price = get_current_price(symbol)
+
+        positions = StockPosition.objects.filter(user=request.user)
+        portfolio_value = Decimal('0.00')
+        portfolio_data = []
+
+        for position in positions:
+            try:
+                position_current_price = get_current_price(position.symbol)
+                total_value = position.quantity * position_current_price
+                portfolio_value += total_value
+                portfolio_data.append({
+                    'symbol': position.symbol,
+                    'quantity': position.quantity,
+                    'current_price': position_current_price,
+                    'total_value': total_value,
+                })
+            except Exception as e:
+                logger.error(f"Error fetching data for {position.symbol}: {str(e)}")
+
+        user_balance = get_user_balance(request.user)
         
         context = {
             'symbol': symbol,
@@ -52,8 +72,11 @@ def home(request):
             'prices': json.dumps(prices),
             'currency': currency,
             'current_price': current_price,
-            'username': request.user.username if request.user.is_authenticated else "Anonymous",
-            'balance': get_user_balance(request.user)
+            'username': request.user.username,
+            'balance': user_balance,
+            'portfolio': portfolio_data,
+            'portfolio_value': portfolio_value,
+            'total_value': portfolio_value + user_balance,
         }
 
     except Exception as e:
@@ -163,32 +186,4 @@ def sell_stock(request):
             logger.error(f"Error selling stock: {str(e)}")
             messages.error(request, "An error occurred while processing your request")
 
-    return redirect('portfolio')
-
-@login_required
-def portfolio(request):
-    positions = StockPosition.objects.filter(user=request.user)
-    portfolio_value = Decimal('0.00')
-    portfolio_data = []
-
-    for position in positions:
-        try:
-            current_price = get_current_price(position.symbol)
-            total_value = position.quantity * current_price
-            portfolio_value += total_value
-            portfolio_data.append({
-                'symbol': position.symbol,
-                'quantity': position.quantity,
-                'current_price': current_price,
-                'total_value': total_value,
-            })
-        except Exception as e:
-            logger.error(f"Error fetching data for {position.symbol}: {str(e)}")
-
-    context = {
-        'portfolio': portfolio_data,
-        'portfolio_value': portfolio_value,
-        'balance': get_user_balance(request.user),
-        'total_value': portfolio_value + get_user_balance(request.user),
-    }
-    return render(request, 'trade/portfolio.html', context)
+    return redirect('home')
