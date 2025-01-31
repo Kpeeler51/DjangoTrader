@@ -2,6 +2,7 @@ from django.shortcuts import render
 import yfinance as yf
 import json
 import logging
+from accounts.views import get_user_balance
 
 logger = logging.getLogger(__name__)
 
@@ -25,33 +26,17 @@ def home(request):
             'dates': json.dumps(dates),
             'prices': json.dumps(prices),
             'currency': currency,
+            'username': request.user.username if request.user.is_authenticated else "Anonymous",
+            'balance': get_user_balance(request.user)
         }
-
-        if request.user.is_authenticated:
-            context['username'] = request.user.username
-            if hasattr(request.user, 'profile'):
-                context['balance'] = request.user.profile.balance
-            else:
-                context['balance'] = "Profile not found"
-        else:
-            context['username'] = "Anonymous"
-            context['balance'] = "Not logged in"
 
     except Exception as e:
         logger.error(f"Error fetching stock data: {str(e)}")
         context = {
             'symbol': symbol,
             'error': 'Unable to fetch stock data',
+            'username': request.user.username if request.user.is_authenticated else "Anonymous",
+            'balance': get_user_balance(request.user)
         }
-        
-        if request.user.is_authenticated:
-            context['username'] = request.user.username
-            if hasattr(request.user, 'profile'):
-                context['balance'] = request.user.profile.balance
-            else:
-                context['balance'] = "Profile not found"
-        else:
-            context['username'] = "Anonymous"
-            context['balance'] = "Not logged in"
     
     return render(request, 'trade/home.html', context)

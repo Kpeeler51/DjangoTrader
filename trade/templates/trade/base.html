@@ -1,4 +1,5 @@
 {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,14 @@
 <body>
     <h1>DjangoTrader</h1>
     
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'balance' %}">Account Balance</a>
+            <a href="{% url 'deposit' %}">Deposit Funds</a>
+        {% endif %}
+    </nav>
+    
     {% if user.is_authenticated %}
         <p>Welcome, {{ user.username }}!
         {% if user.profile %}
@@ -24,6 +33,14 @@
         </form>
     {% else %}
         <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
+    {% endif %}
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 
     {% block content %}

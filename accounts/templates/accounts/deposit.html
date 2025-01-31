@@ -1,0 +1,13 @@
+{% extends "trade/base.html" %}
+
+{% block title %}Deposit Funds{% endblock %}
+
+{% block content %}
+<h2>Deposit Funds</h2>
+<p>Current Balance: ${{ balance }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Deposit</button>
+</form>
+{% endblock %}
