@@ -51,3 +51,10 @@ def get_user_balance(user):
             return "Profile not found"
     else:
         return "Not logged in"
+    
+@login_required
+def reset_account(request):
+    if request.method == 'POST':
+        request.user.profile.reset_account()
+        messages.success(request, 'Your account has been reset to the default state.')
+    return redirect('balance')
