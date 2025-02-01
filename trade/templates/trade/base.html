@@ -9,19 +9,22 @@
 </head>
 <body>
     <div id="notification-container"></div>
-
-    <h1>DjangoTrader</h1>
     
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'balance' %}">Account Balance</a>
-            <a href="{% url 'deposit' %}">Deposit Funds</a>
-        {% endif %}
+    <nav class="navbar">
+        <h1 class="logo">DjangoTrader</h1>
+        <div class="nav-links">
+            <a class="nav-item" href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a class="nav-item" href="{% url 'balance' %}">Account Balance</a>
+                <a class="nav-item" href="{% url 'deposit' %}">Deposit Funds</a>
+            {% else %}
+            <a class="nav-item" href="{% url 'login' %}">Login</a>
+            {% endif %}
+    </div>
     </nav>
     
     {% if user.is_authenticated %}
-        <p >Welcome, {{ user.username }}!
+        <h3 class="welcome-header">Welcome, {{ user.username }}!
         {% if user.profile %}
             <p id="user-balance">Balance: ${{ user.profile.balance }}</p>
         {% endif %}
@@ -31,7 +34,7 @@
             <button type="submit">Logout</button>
         </form>
     {% else %}
-        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
+        <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
     {% endif %}
 
     {% block content %}
