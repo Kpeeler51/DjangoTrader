@@ -4,6 +4,24 @@
     padding: 0;
   }
 
+  .maincontainer {
+    display: flex;
+    padding: 1rem;
+}
+
+.chart-section {
+    flex: 1;
+    min-width: 500px;
+}
+
+.table-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
   body {
     background-color: #A6EBC9;
   }
@@ -70,4 +88,32 @@ nav {
 .welcome-header{
     text-align: center;
     margin-bottom: 1rem;
+}
+
+.chart-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.portfolio {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+}
+
+.port-info td {
+    border: solid black 1px;
+    padding: 1.5rem;
+}
+
+.port-header {
+    margin:0.7rem;
+}
+
+.symbol-header {
+    margin-bottom: 0.20rem;
+}
+
+.price {
+    margin: 0.2rem;
 }

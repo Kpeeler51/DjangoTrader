@@ -5,18 +5,21 @@
 {% block title %}Stock Market Graph{% endblock %}
 
 {% block content %}
-    <h2>Stock Market Graph</h2>
+<main class="maincontainer">
+    <section class="chart-section">
     
-    <form method="get">
-        <label for="stock_symbol">Enter Stock Symbol:</label>
-        <input type="text" id="stock_symbol" name="symbol" value="{{ symbol }}">
-        <input type="submit" value="Show Graph">
-    </form>
+    <div class="chart-info">
+        <form class="stock-form" method="get">
+            <label for="stock_symbol">Enter Stock Symbol:</label>
+            <input type="text" id="stock_symbol" name="symbol" value="{{ symbol }}">
+            <input type="submit" value="Show Graph">
+        </form>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% else %}
-        <p>Currency: {{ currency }}</p>
+        {% if error %}
+            <p class="currency" style="color: red;">{{ error }}</p>
+        {% else %}
+            <p class="currency">Currency: {{ currency }}</p>
+    </div>
         <canvas id="stockChart"></canvas>
 
         <script>
@@ -34,12 +37,13 @@
             });
         </script>
     {% endif %}
-
-    <p>Current Price: {{ currency }} {{ current_price }}</p>
+    </section>
+    <section class="table-section">
 
     {% if user.is_authenticated %}
-    <h3>Buy Stock</h3>
-    <h4>{{symbol}}</h4>
+    <h2 class="port-header">Buy Stock</h2>
+    <h3 class="symbol-header">{{symbol}}</h3>
+    <p class="price">Current Price: {{ currency }} {{ current_price }}</p>
     <form id="primarybuy" method="post" action="{% url 'buy_stock' %}">
         {% csrf_token %}
         <input type="hidden" name="symbol" value="{{ symbol }}" required>
@@ -47,9 +51,8 @@
         <button type="submit">Buy Stock</button>
     </form>
 
-    <h2>Your Portfolio</h2>
-    {% if portfolio %}
-        <table>
+    <h2 class="port-header">Your Portfolio</h2>
+        <table class="portfolio">
             <thead>
                 <tr>
                     <th>Symbol</th>
@@ -62,13 +65,13 @@
             </thead>
             <tbody>
                 {% for position in portfolio %}
-                    <tr>
+                    <tr class="port-info">
                         <td>{{ position.symbol }}</td>
                         <td>{{ position.quantity }}</td>
                         <td>${{ position.current_price }}</td>
                         <td>${{ position.total_value }}</td>
                         <td>
-                            <form id="buy-form-{{ position.symbol }}" method="post" action="{% url 'buy_stock' %}" onsubmit="return handleFormSubmit(event, 'buy')">
+                            <form id="buy-form-{{ position.symbol }}" method="post" action="{% url 'buy_stock' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="symbol" value="{{ position.symbol }}">
                                 <input type="number" name="quantity" min="1" required>
@@ -76,7 +79,7 @@
                             </form>
                         </td>
                         <td>
-                            <form id="sell-form-{{ position.symbol }}" method="post" action="{% url 'sell_stock' %}" onsubmit="return handleFormSubmit(event, 'sell')">
+                            <form id="sell-form-{{ position.symbol }}" method="post" action="{% url 'sell_stock' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="symbol" value="{{ position.symbol }}">
                                 <input type="number" name="quantity" min="1" max="{{ position.quantity }}" required>
@@ -89,21 +92,11 @@
         </table>
         <p>Total Portfolio Value: $<span id="portfolio-value">{{ portfolio_value }}</span></p>
         <p>Total Account Value (Balance + Portfolio): $<span id="total-account-value">{{ total_value }}</span></p>
-    {% else %}
-        <p>You don't have any positions yet.</p>
-    {% endif %}
 
     <script src="{% static 'trade/js/portfolio.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            initializePortfolioJS(
-                "{% url 'buy_stock' %}",
-                "{% url 'sell_stock' %}",
-                "{{ csrf_token }}"
-            );
-        });
-    </script>
 {% endif %}
+    </section>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
