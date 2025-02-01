@@ -37,15 +37,15 @@
 
     <p>Current Price: {{ currency }} {{ current_price }}</p>
 
-
+    {% if user.is_authenticated %}
     <h3>Buy Stock</h3>
     <h4>{{symbol}}</h4>
-<form id="primarybuy" method="post" action="{% url 'buy_stock' %}">
-    {% csrf_token %}
-    <input type="hidden" name="symbol" value="{{ symbol }}" required>
-    <input type="number" name="quantity" min="1" placeholder="Quantity" required>
-    <button type="submit">Buy Stock</button>
-</form>
+    <form id="primarybuy" method="post" action="{% url 'buy_stock' %}">
+        {% csrf_token %}
+        <input type="hidden" name="symbol" value="{{ symbol }}" required>
+        <input type="number" name="quantity" min="1" placeholder="Quantity" required>
+        <button type="submit">Buy Stock</button>
+    </form>
 
     <h2>Your Portfolio</h2>
     {% if portfolio %}
@@ -89,15 +89,25 @@
         </table>
         <p>Total Portfolio Value: $<span id="portfolio-value">{{ portfolio_value }}</span></p>
         <p>Total Account Value (Balance + Portfolio): $<span id="total-account-value">{{ total_value }}</span></p>
-
     {% else %}
         <p>You don't have any positions yet.</p>
     {% endif %}
 
     <script src="{% static 'trade/js/portfolio.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="{% static 'chart.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePortfolioJS(
+                "{% url 'buy_stock' %}",
+                "{% url 'sell_stock' %}",
+                "{{ csrf_token }}"
+            );
+        });
+    </script>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="{% static 'chart.js' %}"></script>
     
 <script>
     document.addEventListener('DOMContentLoaded', function() {
