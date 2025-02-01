@@ -1,4 +1,6 @@
 {% extends "trade/base.html" %}
+{% load static %}
+
 
 {% block title %}Stock Market Graph{% endblock %}
 
@@ -37,12 +39,13 @@
 
 
     <h3>Buy Stock</h3>
-    <form method="post" action="{% url 'buy_stock' %}">
-        {% csrf_token %}
-        <input type="text" name="symbol" value="{{ symbol }}" required>
-        <input type="number" name="quantity" min="1" placeholder="Quantity" required>
-        <button type="submit">Buy Stock</button>
-    </form>
+    <h4>{{symbol}}</h4>
+<form id="primarybuy" method="post" action="{% url 'buy_stock' %}">
+    {% csrf_token %}
+    <input type="hidden" name="symbol" value="{{ symbol }}" required>
+    <input type="number" name="quantity" min="1" placeholder="Quantity" required>
+    <button type="submit">Buy Stock</button>
+</form>
 
     <h2>Your Portfolio</h2>
     {% if portfolio %}
@@ -65,7 +68,7 @@
                         <td>${{ position.current_price }}</td>
                         <td>${{ position.total_value }}</td>
                         <td>
-                            <form method="post" action="{% url 'buy_stock' %}">
+                            <form id="buy-form-{{ position.symbol }}" method="post" action="{% url 'buy_stock' %}" onsubmit="return handleFormSubmit(event, 'buy')">
                                 {% csrf_token %}
                                 <input type="hidden" name="symbol" value="{{ position.symbol }}">
                                 <input type="number" name="quantity" min="1" required>
@@ -73,7 +76,7 @@
                             </form>
                         </td>
                         <td>
-                            <form method="post" action="{% url 'sell_stock' %}">
+                            <form id="sell-form-{{ position.symbol }}" method="post" action="{% url 'sell_stock' %}" onsubmit="return handleFormSubmit(event, 'sell')">
                                 {% csrf_token %}
                                 <input type="hidden" name="symbol" value="{{ position.symbol }}">
                                 <input type="number" name="quantity" min="1" max="{{ position.quantity }}" required>
@@ -84,9 +87,25 @@
                 {% endfor %}
             </tbody>
         </table>
-        <p>Total Portfolio Value: ${{ portfolio_value }}</p>
-        <p>Total Account Value (Balance + Portfolio): ${{ total_value }}</p>
+        <p>Total Portfolio Value: $<span id="portfolio-value">{{ portfolio_value }}</span></p>
+        <p>Total Account Value (Balance + Portfolio): $<span id="total-account-value">{{ total_value }}</span></p>
+
     {% else %}
         <p>You don't have any positions yet.</p>
     {% endif %}
+
+    <script src="{% static 'trade/js/portfolio.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="{% static 'chart.js' %}"></script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        initializePortfolioJS(
+            "{% url 'buy_stock' %}",
+            "{% url 'sell_stock' %}",
+            "{{ csrf_token }}"
+        );
+    });
+</script>
 {% endblock %}

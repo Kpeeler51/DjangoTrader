@@ -1,16 +1,15 @@
 {% load static %}
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}DjangoTrader{% endblock %}</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="{% static 'chart.js' %}"></script>
+    <link href="{% static 'trade/css/style.css' %}" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <div id="notification-container"></div>
+
     <h1>DjangoTrader</h1>
     
     <nav>
@@ -22,9 +21,9 @@
     </nav>
     
     {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}!
+        <p >Welcome, {{ user.username }}!
         {% if user.profile %}
-            Your balance: ${{ user.profile.balance }}
+            <p id="user-balance">Balance: ${{ user.profile.balance }}</p>
         {% endif %}
         </p>
         <form method="post" action="{% url 'logout' %}">
@@ -33,14 +32,6 @@
         </form>
     {% else %}
         <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
-    {% endif %}
-
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
     {% endif %}
 
     {% block content %}

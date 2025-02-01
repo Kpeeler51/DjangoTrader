@@ -1,0 +1,15 @@
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    transform: translateX(100%);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.notification.show {
+    transform: translateX(0);
+}

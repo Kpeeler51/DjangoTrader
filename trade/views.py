@@ -1,14 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 import yfinance as yf
 import json
 import logging
 from decimal import Decimal
 from django.db import transaction
-from .models import StockPosition, Trade
+from .models import StockPosition
 from accounts.views import get_user_balance
 from accounts.models import Transaction
+from django.urls import reverse
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +79,9 @@ def home(request):
             'portfolio': portfolio_data,
             'portfolio_value': portfolio_value,
             'total_value': portfolio_value + user_balance,
+            'buy_url': reverse('buy_stock'),
+            'sell_url': reverse('sell_stock'),
+            'csrf_token': get_token(request),
         }
 
     except Exception as e:
@@ -93,97 +98,131 @@ def home(request):
 @login_required
 @transaction.atomic
 def buy_stock(request):
-    if request.method == 'POST':
-        symbol = request.POST.get('symbol')
-        quantity = int(request.POST.get('quantity'))
-        
-        try:
-            current_price = get_current_price(symbol)
-            total_cost = quantity * current_price
+    symbol = request.POST.get('symbol')
+    quantity = int(request.POST.get('quantity'))
+    
+    try:
+        current_price = get_current_price(symbol)
+        total_cost = quantity * current_price
 
-            profile = request.user.profile
-            if profile.balance < total_cost:
-                messages.error(request, "Insufficient funds")
-                return redirect('home')
+        profile = request.user.profile
+        if profile.balance < total_cost:
+            return JsonResponse({'success': False, 'error': "Insufficient funds"})
 
-            # Update user's balance
-            profile.balance -= total_cost
-            profile.save()
+        # Update user's balance
+        profile.balance -= total_cost
+        profile.save()
 
-            # Update or create stock position
-            position, created = StockPosition.objects.get_or_create(
-                user=request.user,
-                symbol=symbol,
-                defaults={'quantity': quantity}
-            )
-            if not created:
-                position.quantity += quantity
-                position.save()
+        # Update or create stock position
+        position, created = StockPosition.objects.get_or_create(
+            user=request.user,
+            symbol=symbol,
+            defaults={'quantity': quantity}
+        )
+        if not created:
+            position.quantity += quantity
+            position.save()
 
-            # Create transaction record
-            Transaction.objects.create(
-                user=request.user,
-                amount=total_cost,
-                transaction_type='STOCK_BUY',
-                symbol=symbol,
-                quantity=quantity,
-                price=current_price
-            )
+        # Create transaction record
+        Transaction.objects.create(
+            user=request.user,
+            amount=total_cost,
+            transaction_type='STOCK_BUY',
+            symbol=symbol,
+            quantity=quantity,
+            price=current_price
+        )
 
-            messages.success(request, f'Successfully bought {quantity} shares of {symbol} at ${current_price} per share')
-        except ValueError as ve:
-            messages.error(request, str(ve))
-        except Exception as e:
-            logger.error(f"Error buying stock: {str(e)}")
-            messages.error(request, f"An error occurred while processing your request: {str(e)}")
+        # Fetch updated portfolio data
+        portfolio_data = get_portfolio_data(request.user)
+        portfolio_value = sum(position['total_value'] for position in portfolio_data)
+        total_value = portfolio_value + profile.balance
 
-    return redirect('home')
+        return JsonResponse({
+            'success': True,
+            'message': f'Successfully bought {quantity} shares of {symbol} at ${current_price} per share',
+            'portfolio': portfolio_data,
+            'portfolio_value': portfolio_value,
+            'total_value': total_value,
+            'balance': profile.balance
+        })
+    except ValueError as ve:
+        return JsonResponse({'success': False, 'error': str(ve)})
+    except Exception as e:
+        logger.error(f"Error buying stock: {str(e)}")
+        return JsonResponse({'success': False, 'error': f"An error occurred while processing your request: {str(e)}"})
 
 @login_required
 @transaction.atomic
 def sell_stock(request):
-    if request.method == 'POST':
-        symbol = request.POST.get('symbol')
-        quantity = int(request.POST.get('quantity'))
-        
+    symbol = request.POST.get('symbol')
+    quantity = int(request.POST.get('quantity'))
+    
+    try:
+        current_price = get_current_price(symbol)
+        total_value = quantity * current_price
+
+        position = StockPosition.objects.get(user=request.user, symbol=symbol)
+        if position.quantity < quantity:
+            return JsonResponse({'success': False, 'error': "Insufficient stocks to sell"})
+
+        # Update user's balance
+        profile = request.user.profile
+        profile.balance += total_value
+        profile.save()
+
+        # Update stock position
+        position.quantity -= quantity
+        if position.quantity == 0:
+            position.delete()
+        else:
+            position.save()
+
+        # Create transaction record
+        Transaction.objects.create(
+            user=request.user,
+            amount=total_value,
+            transaction_type='STOCK_SELL',
+            symbol=symbol,
+            quantity=quantity,
+            price=current_price
+        )
+
+        # Fetch updated portfolio data
+        portfolio_data = get_portfolio_data(request.user)
+        portfolio_value = sum(position['total_value'] for position in portfolio_data)
+        total_value = portfolio_value + profile.balance
+
+        return JsonResponse({
+            'success': True,
+            'message': f'Successfully sold {quantity} shares of {symbol} at ${current_price} per share',
+            'portfolio': portfolio_data,
+            'portfolio_value': portfolio_value,
+            'total_value': total_value,
+            'balance': profile.balance
+        })
+    except StockPosition.DoesNotExist:
+        return JsonResponse({'success': False, 'error': "You don't own this stock"})
+    except ValueError as ve:
+        return JsonResponse({'success': False, 'error': str(ve)})
+    except Exception as e:
+        logger.error(f"Error selling stock: {str(e)}")
+        return JsonResponse({'success': False, 'error': "An error occurred while processing your request"})
+    
+
+def get_portfolio_data(user):
+    positions = StockPosition.objects.filter(user=user)
+    portfolio_data = []
+    for position in positions:
         try:
-            current_price = get_current_price(symbol)
-            total_value = quantity * current_price
-
-            position = StockPosition.objects.get(user=request.user, symbol=symbol)
-            if position.quantity < quantity:
-                messages.error(request, "Insufficient stocks to sell")
-                return redirect('portfolio')
-
-            # Update user's balance
-            profile = request.user.profile
-            profile.balance += total_value
-            profile.save()
-
-            # Update stock position
-            position.quantity -= quantity
-            if position.quantity == 0:
-                position.delete()
-            else:
-                position.save()
-
-            # Create transaction record
-            Transaction.objects.create(
-                user=request.user,
-                amount=total_value,
-                transaction_type='STOCK_SELL',
-                symbol=symbol,
-                quantity=quantity,
-                price=current_price
-            )
-
-            messages.success(request, f'Successfully sold {quantity} shares of {symbol} at ${current_price} per share')
-        except StockPosition.DoesNotExist:
-            messages.error(request, "You don't own this stock")
-        except ValueError as ve:
-            messages.error(request, str(ve))
+            current_price = get_current_price(position.symbol)
+            total_value = position.quantity * current_price
+            portfolio_data.append({
+                'symbol': position.symbol,
+                'quantity': position.quantity,
+                'current_price': current_price,
+                'total_value': total_value,
+            })
         except Exception as e:
-            logger.error(f"Error selling stock: {str(e)}")
-            messages.error(request, "An error occurred while processing your request")
-
-    return redirect('home')
+            logger.error(f"Error fetching data for {position.symbol}: {str(e)}")
+    return portfolio_data
