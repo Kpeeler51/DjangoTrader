@@ -3,6 +3,11 @@ function handleFormSubmit(event) {
     const form = event.target;
     const formData = new FormData(form);
 
+    const symbolInput = formData.get('symbol');
+    if (symbolInput) {
+        formData.set('symbol', symbolInput.toUpperCase());
+    }
+
     fetch(form.action, {
         method: 'POST',
         body: formData,
@@ -77,22 +82,22 @@ function updatePortfolio(portfolio, portfolioValue, totalValue) {
         
         const row = `
             <tr>
-                <td>${position.symbol}</td>
+                <td>${position.symbol.toUpperCase()}</td>
                 <td>${position.quantity}</td>
                 <td>$${currentPrice.toFixed(2)}</td>
                 <td>$${totalPositionValue.toFixed(2)}</td>
                 <td>
-                    <form id="buy-form-${position.symbol}" method="post" action="${buyStockUrl}" onsubmit="return handleFormSubmit(event, 'buy')">
+                    <form id="buy-form-${position.symbol.toUpperCase()}" method="post" action="${buyStockUrl}" onsubmit="return handleFormSubmit(event, 'buy')">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-                        <input type="hidden" name="symbol" value="${position.symbol}">
+                        <input type="hidden" name="symbol" value="${position.symbol.toUpperCase()}">
                         <input type="number" name="quantity" min="1" required>
                         <button type="submit">Buy</button>
                     </form>
                 </td>
                 <td>
-                    <form id="sell-form-${position.symbol}" method="post" action="${sellStockUrl}" onsubmit="return handleFormSubmit(event, 'sell')">
+                    <form id="sell-form-${position.symbol.toUpperCase()}" method="post" action="${sellStockUrl}" onsubmit="return handleFormSubmit(event, 'sell')">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-                        <input type="hidden" name="symbol" value="${position.symbol}">
+                        <input type="hidden" name="symbol" value="${position.symbol.toUpperCase()}">
                         <input type="number" name="quantity" min="1" max="${position.quantity}" required>
                         <button type="submit">Sell</button>
                     </form>
