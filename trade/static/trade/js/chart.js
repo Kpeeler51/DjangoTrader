@@ -7,7 +7,7 @@ function createChart(dates, prices, symbol, currency) {
             datasets: [{
                 label: `${symbol} (${currency})`,
                 data: prices,
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: '#62AB37',
                 tension: 0.1
             }]
         },

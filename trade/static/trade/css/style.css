@@ -1,3 +1,13 @@
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #A6EBC9;
+  }
+
 #notification-container {
     position: fixed;
     top: 20px;
@@ -27,6 +37,15 @@ nav {
     font-size: 35px;
 }
 
+.nav-logo {
+    text-decoration: none;
+    color: black;
+}
+
+.nav-logo:hover {
+    color: white;
+}
+
 .nav-links {
     display: flex;
 }
@@ -34,7 +53,19 @@ nav {
 .nav-item {
     font-size: 1.5rem;
     margin: 0rem 3rem;
+    text-decoration: none;
+    color: black;
 }
+
+.nav-item:hover {
+    color: white;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+}
+
 
 .welcome-header{
     text-align: center;

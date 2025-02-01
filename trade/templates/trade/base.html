@@ -11,12 +11,16 @@
     <div id="notification-container"></div>
     
     <nav class="navbar">
-        <h1 class="logo">DjangoTrader</h1>
+        <h1 class="logo"> <a class="nav-logo" href="{% url 'home' %}">DjangoTrader</a></h1>
         <div class="nav-links">
             <a class="nav-item" href="{% url 'home' %}">Home</a>
             {% if user.is_authenticated %}
                 <a class="nav-item" href="{% url 'balance' %}">Account Balance</a>
                 <a class="nav-item" href="{% url 'deposit' %}">Deposit Funds</a>
+                <form class="nav-item" method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="logout-button nav-item" type="submit">Logout</button>
+                </form>
             {% else %}
             <a class="nav-item" href="{% url 'login' %}">Login</a>
             {% endif %}
@@ -29,10 +33,6 @@
             <p id="user-balance">Balance: ${{ user.profile.balance }}</p>
         {% endif %}
         </p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
     {% else %}
         <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
     {% endif %}
