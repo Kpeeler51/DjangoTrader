@@ -81,13 +81,13 @@ function updatePortfolio(portfolio, portfolioValue, totalValue) {
         const totalPositionValue = parseFloat(position.total_value);
         
         const row = `
-            <tr>
+            <tr class="port-info">
                 <td>${position.symbol.toUpperCase()}</td>
                 <td>${position.quantity}</td>
                 <td>$${currentPrice.toFixed(2)}</td>
                 <td>$${totalPositionValue.toFixed(2)}</td>
                 <td>
-                    <form id="buy-form-${position.symbol.toUpperCase()}" method="post" action="${buyStockUrl}" onsubmit="return handleFormSubmit(event, 'buy')">
+                    <form id="buy-form-${position.symbol.toUpperCase()}" method="post" action="${buyStockUrl}">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                         <input type="hidden" name="symbol" value="${position.symbol.toUpperCase()}">
                         <input type="number" name="quantity" min="1" required>
@@ -95,7 +95,7 @@ function updatePortfolio(portfolio, portfolioValue, totalValue) {
                     </form>
                 </td>
                 <td>
-                    <form id="sell-form-${position.symbol.toUpperCase()}" method="post" action="${sellStockUrl}" onsubmit="return handleFormSubmit(event, 'sell')">
+                    <form id="sell-form-${position.symbol.toUpperCase()}" method="post" action="${sellStockUrl}">
                         <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
                         <input type="hidden" name="symbol" value="${position.symbol.toUpperCase()}">
                         <input type="number" name="quantity" min="1" max="${position.quantity}" required>
@@ -109,6 +109,10 @@ function updatePortfolio(portfolio, portfolioValue, totalValue) {
 
     document.getElementById('portfolio-value').textContent = parseFloat(portfolioValue).toFixed(2);
     document.getElementById('total-account-value').textContent = parseFloat(totalValue).toFixed(2);
+
+    document.querySelectorAll('form[id^="buy-form-"], form[id^="sell-form-"]').forEach(form => {
+        form.addEventListener('submit', (event) => handleFormSubmit(event, form.id.startsWith('buy') ? 'buy' : 'sell'));
+    });
 }
 
 let buyStockUrl = '';
