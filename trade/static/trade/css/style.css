@@ -22,13 +22,9 @@
     align-items: center;
 }
 
-  body {
-    background-color: #A6EBC9;
-  }
-
 #notification-container {
     position: fixed;
-    top: 20px;
+    top: 60px;
     right: 20px;
     z-index: 1000;
 }
@@ -36,6 +32,8 @@
 .notification {
     transform: translateX(100%);
     transition: opacity 0.3s, transform 0.3s;
+    background-color: #62AB37;
+    padding: 10px;
 }
 
 .notification.show {
