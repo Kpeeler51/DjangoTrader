@@ -1,0 +1,61 @@
+table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+th {
+    padding: 1rem 2.43rem
+}
+
+h2 {
+    margin: 1rem;
+}
+
+.reset-button {
+    background-color: red;
+}
+
+.reset-container{
+    margin-top: 3rem;
+}
+
+.balance {
+    margin-bottom: 2rem;
+}
+
+.deposit-form {
+    display: inline-flex;
+    margin: 1rem;
+    align-items: center;
+}
+
+.deposit-button {
+    margin-left: 1rem;
+}
+
+.login-form {
+    margin: 1rem
+}
+
+.login-button {
+    margin: 1rem
+}
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.register-container p{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.register-container input{
+    max-width: 500px
+}

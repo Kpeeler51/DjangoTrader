@@ -1,13 +1,15 @@
 {% extends "trade/base.html" %}
+{% load static %}
 
 {% block title %}Deposit Funds{% endblock %}
 
 {% block content %}
+<link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
 <h2>Deposit Funds</h2>
-<p>Current Balance: ${{ balance }}</p>
-<form method="post">
+<p class="balance">Current Balance: ${{ balance }}</p>
+<form class="deposit-form" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Deposit</button>
+    <button class="deposit-button" type="submit">Deposit</button>
 </form>
 {% endblock %}

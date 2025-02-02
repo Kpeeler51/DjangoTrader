@@ -1,9 +1,11 @@
 {% extends "trade/base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="register-form">
+<link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
+<div class="register-container">
     <h2>Register for DjangoTrader</h2>
-    <form method="post">
+    <form class="register-form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Register</button>

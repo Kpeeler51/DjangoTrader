@@ -1,7 +1,15 @@
 /* CSS Reset */
 * {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
     margin: 0;
     padding: 0;
+    text-align: center;
+  }
+
+  body {
+    min-height: 100vh;
+    height:100%
   }
 
   .maincontainer {
@@ -12,14 +20,15 @@
 .chart-section {
     flex: 1;
     min-width: 500px;
+    border: #62AB37 solid;
 }
 
 .table-section {
     flex: 1;
-    min-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border: #62AB37 solid;
 }
 
 #notification-container {
@@ -41,6 +50,7 @@
 }
 
 nav {
+    font-family: "Open Sans", serif;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,6 +90,8 @@ nav {
 .logout-button {
     background: none;
     border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 
@@ -89,19 +101,16 @@ nav {
 }
 
 .chart-info {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
 }
 
-.portfolio {
+table {
     border-collapse: collapse;
-    width: 100%;
-    max-width: 800px;
 }
 
-.port-info td {
-    border: solid black 1px;
-    padding: 1.5rem;
+tr, td, th {
+    padding: 1rem;
+    border: black solid 1px;
 }
 
 .port-header {
@@ -109,9 +118,33 @@ nav {
 }
 
 .symbol-header {
-    margin-bottom: 0.20rem;
+    margin-bottom: 1rem;
 }
 
 .price {
-    margin: 0.2rem;
+    margin: 0.5rem;
+}
+
+button {
+    padding: 0.3rem;
+    border: none;
+    cursor: pointer;
+    background-color: #62AB37;
+  }
+  button:hover {
+    background-color: #68c92f;
+  }
+
+  .currency {
+    float: right;
+    display: flex;
+  }
+
+  a {
+    text-decoration: none;
+    color: #62AB37;
+  }
+
+  a:hover {
+    color: #68c92f
 }
