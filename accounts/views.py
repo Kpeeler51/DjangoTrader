@@ -2,9 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from .forms import DepositForm
-from django.core.exceptions import ValidationError
 
 def register(request):
     if request.method == 'POST':
@@ -23,12 +21,8 @@ def deposit(request):
         form = DepositForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            try:
-                request.user.profile.deposit(amount)
-                messages.success(request, f'Successfully deposited ${amount:.2f}')
-                return redirect('balance')
-            except ValidationError as e:
-                messages.error(request, str(e))
+            request.user.profile.deposit(amount)
+            return redirect('balance')
     else:
         form = DepositForm()
     
@@ -60,5 +54,4 @@ def get_user_balance(user):
 def reset_account(request):
     if request.method == 'POST':
         request.user.profile.reset_account()
-        messages.success(request, 'Your account has been reset to the default state.')
     return redirect('balance')
