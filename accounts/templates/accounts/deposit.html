@@ -4,12 +4,18 @@
 {% block title %}Deposit Funds{% endblock %}
 
 {% block content %}
-<link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
-<h2>Deposit Funds</h2>
-<p class="balance">Current Balance: ${{ balance }}</p>
-<form class="deposit-form" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="deposit-button" type="submit">Deposit</button>
-</form>
+<link 
+href="{% static 'accounts/css/style.css' %}" 
+rel="stylesheet" 
+type="text/css">
+
+<section>
+    <h2>Deposit Funds</h2>
+    <p class="balance">Current Balance: ${{ balance }}</p>
+    <form class="deposit-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="deposit-button" type="submit">Deposit</button>
+    </form>
+</section>
 {% endblock %}
