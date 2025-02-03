@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .forms import DepositForm
 
+# User registration and authentication.
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -15,6 +16,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+# View for user deposits.
 @login_required
 def deposit(request):
     if request.method == 'POST':
@@ -32,6 +34,7 @@ def deposit(request):
     }
     return render(request, 'accounts/deposit.html', context)
 
+# Display user's account balance and transaction history
 @login_required
 def account_balance(request):
     transactions = request.user.profile.get_transactions()
@@ -41,6 +44,7 @@ def account_balance(request):
     }
     return render(request, 'accounts/balance.html', context)
 
+# Utility function to get user balance
 def get_user_balance(user):
     if user.is_authenticated:
         if hasattr(user, 'profile'):
@@ -49,7 +53,8 @@ def get_user_balance(user):
             return "Profile not found"
     else:
         return "Not logged in"
-    
+
+# Reset user's account (clear balance and transactions)    
 @login_required
 def reset_account(request):
     if request.method == 'POST':
