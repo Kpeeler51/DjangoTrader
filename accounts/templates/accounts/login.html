@@ -4,14 +4,18 @@
 {% block title %}Trader Login{% endblock %}
 
 {% block content %}
-<link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
-<div class="login-form">
+<link href="{% static 'accounts/css/style.css' %}" 
+rel="stylesheet"
+ type="text/css">
+
+<section class="login-form">
     <h2>Login to DjangoTrader</h2>
     <form class="login-form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button class="login-button" type="submit">Login</button>
     </form>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
-</div>
+    <p>Don't have an account? 
+        <a href="{% url 'register' %}">Register here</a></p>
+</section>
 {% endblock %}

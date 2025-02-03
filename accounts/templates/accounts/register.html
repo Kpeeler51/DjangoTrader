@@ -3,7 +3,8 @@
 
 {% block content %}
 <link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
-<div class="register-container">
+
+<section class="register-container">
     <h2>Register for DjangoTrader</h2>
     <form class="register-form" method="post">
         {% csrf_token %}
@@ -11,5 +12,5 @@
         <button type="submit">Register</button>
     </form>
     <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-</div>
+</section>
 {% endblock %}
