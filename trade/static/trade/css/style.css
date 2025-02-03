@@ -6,7 +6,7 @@
     padding: 0;
     text-align: center;
   }
-
+  /* Global styling. */
   body {
     height: 100vh;
     display: flex;
@@ -16,7 +16,7 @@
 .main-content {
     flex: 1 0 auto;
 }
-
+/* Styling for links */
 a {
     text-decoration: none;
     color: #62AB37;
@@ -36,7 +36,7 @@ button {
 button:hover {
     background-color: #68c92f;
   }
-
+/* Navbar styling */
 nav {
     font-family: "Open Sans", serif;
     display: flex;
@@ -46,11 +46,11 @@ nav {
     height: 3rem;
     padding: 0 1rem;
 }
-
+/* Logo header. */
 .logo {
     font-size: 35px;
 }
-
+/* Logo hyperlink */
 .nav-logo {
     text-decoration: none;
     color: black;
@@ -74,14 +74,14 @@ nav {
 .nav-item:hover {
     color: white;
 }
-
+/* Logout button is a submit button disguised as a hyperlink for security */
 .logout-button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
 }
-
+/* Notifications fade in from top right of screen. */
 #notification-container {
     position: fixed;
     top: 60px;
@@ -100,17 +100,17 @@ nav {
     transform: translateX(0);
 }
 
-
+/* Welcome header. */
 .welcome-header{
     text-align: center;
     margin-bottom: 1rem;
 }
-
+/* Home page container */
 .home-container {
     display: flex;
     padding: 1rem;
 }
-
+/* Stock chart styling */
 .chart-section {
     flex: 1;
     min-width: 500px;
@@ -125,7 +125,7 @@ nav {
     float: right;
     display: flex;
 }
-
+/* Portfolio styling */
 .table-section {
     flex: 1;
     display: flex;
@@ -145,7 +145,8 @@ nav {
 .price {
     margin: 0.5rem;
 }
-
+/* Global table styling. Most relevant to portfolio so is kept in portfolio
+instead of global section */
 table {
     border-collapse: collapse;
 }
@@ -154,7 +155,7 @@ tr, td, th {
     padding: 1rem;
     border: black solid 1px;
 }
-
+/* Footer */
 footer {
     background-color: #62AB37;
     text-align: center;
