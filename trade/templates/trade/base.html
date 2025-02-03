@@ -33,17 +33,19 @@
     </nav>
     
     {% if user.is_authenticated %}
-        <h3 class="welcome-header">Welcome, {{ user.username }}!
+        <h3 class="welcome-header">Welcome, {{ user.username }}!</h3>
         {% if user.profile %}
             <p id="user-balance">Balance: ${{ user.profile.balance }}</p>
         {% endif %}
         </p>
     {% else %}
-        <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
+        <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p> </h3>
     {% endif %}
 
+    <main class="main-content">
         {% block content %}
         {% endblock %}
+    </main>
 
     <footer>
         <p>&copy; DjangoTrader 2021</p>
