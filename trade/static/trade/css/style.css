@@ -12,42 +12,25 @@
     height:100%
   }
 
-  .maincontainer {
-    display: flex;
-    padding: 1rem;
+a {
+    text-decoration: none;
+    color: #62AB37;
 }
 
-.chart-section {
-    flex: 1;
-    min-width: 500px;
-    border: #62AB37 solid;
+a:hover {
+    color: #68c92f
 }
 
-.table-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: #62AB37 solid;
-}
-
-#notification-container {
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.notification {
-    transform: translateX(100%);
-    transition: opacity 0.3s, transform 0.3s;
+button {
+    padding: 0.3rem;
+    border: none;
+    cursor: pointer;
     background-color: #62AB37;
-    padding: 10px;
 }
-
-.notification.show {
-    transform: translateX(0);
-}
+  
+button:hover {
+    background-color: #68c92f;
+  }
 
 nav {
     font-family: "Open Sans", serif;
@@ -94,23 +77,61 @@ nav {
     padding: 0;
 }
 
+footer{
+    background-color: #8d99ae8c;
+    text-align: center;
+}
+
+#notification-container {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    transform: translateX(100%);
+    transition: opacity 0.3s, transform 0.3s;
+    background-color: #62AB37;
+    padding: 10px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
 
 .welcome-header{
     text-align: center;
     margin-bottom: 1rem;
 }
 
+  .maincontainer {
+    display: flex;
+    padding: 1rem;
+}
+
+.chart-section {
+    flex: 1;
+    min-width: 500px;
+    border: #62AB37 solid;
+}
+
 .chart-info {
     display: inline-flex;
 }
 
-table {
-    border-collapse: collapse;
+.currency {
+    float: right;
+    display: flex;
 }
 
-tr, td, th {
-    padding: 1rem;
-    border: black solid 1px;
+.table-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: #62AB37 solid;
 }
 
 .port-header {
@@ -125,26 +146,11 @@ tr, td, th {
     margin: 0.5rem;
 }
 
-button {
-    padding: 0.3rem;
-    border: none;
-    cursor: pointer;
-    background-color: #62AB37;
-  }
-  button:hover {
-    background-color: #68c92f;
-  }
+table {
+    border-collapse: collapse;
+}
 
-  .currency {
-    float: right;
-    display: flex;
-  }
-
-  a {
-    text-decoration: none;
-    color: #62AB37;
-  }
-
-  a:hover {
-    color: #68c92f
+tr, td, th {
+    padding: 1rem;
+    border: black solid 1px;
 }
