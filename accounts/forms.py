@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import MinValueValidator
-
+# Form for depositing money into account.
 class DepositForm(forms.Form):
     amount = forms.DecimalField(
         max_digits=12,
