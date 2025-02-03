@@ -8,9 +8,14 @@
   }
 
   body {
-    min-height: 100vh;
-    height:100%
-  }
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1 0 auto;
+}
 
 a {
     text-decoration: none;
@@ -77,11 +82,6 @@ nav {
     padding: 0;
 }
 
-footer{
-    background-color: #8d99ae8c;
-    text-align: center;
-}
-
 #notification-container {
     position: fixed;
     top: 60px;
@@ -106,7 +106,7 @@ footer{
     margin-bottom: 1rem;
 }
 
-  .maincontainer {
+.home-container {
     display: flex;
     padding: 1rem;
 }
@@ -153,4 +153,9 @@ table {
 tr, td, th {
     padding: 1rem;
     border: black solid 1px;
+}
+
+footer {
+    background-color: #62AB37;
+    text-align: center;
 }
