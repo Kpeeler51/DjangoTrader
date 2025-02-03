@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 
+# User profile model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=500.00)
@@ -12,6 +13,7 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s profile"
 
+    # method to handle user deposits
     def deposit(self, amount):
         if amount <= 0:
             raise ValidationError("Deposit amount must be positive.")
@@ -20,7 +22,7 @@ class Profile(models.Model):
         self.balance += amount
         self.save()
         Transaction.objects.create(user=self.user, amount=amount, transaction_type='DEPOSIT')
-
+    # Method to handle user transactions.
     def add_trade_transaction(self, symbol, quantity, price, trade_type):
         amount = Decimal(quantity) * Decimal(price)
         if trade_type == 'BUY':
@@ -38,24 +40,27 @@ class Profile(models.Model):
             quantity=quantity,
             price=price
         )
-
+    # Method to retrieve user's transaction history
     def get_transactions(self):
         return Transaction.objects.filter(user=self.user).order_by('-timestamp')
     
+    #Method to reset user's account to initial balance and delete transaction history.
     def reset_account(self):
        self.balance = Decimal('500.00')
        Transaction.objects.filter(user=self.user).delete()
        self.save()
 
+# Signal to create user profile when a new user is created
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
+# Signal to save user profile when user object is saved
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
+# Store user transaction history.
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
         ('DEPOSIT', 'Deposit'),
