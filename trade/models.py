@@ -1,6 +1,6 @@
+from accounts.models import Transaction
 from django.db import models
 from django.contrib.auth.models import User
-from decimal import Decimal
 
 class StockPosition(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -30,7 +30,6 @@ class Trade(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        from accounts.models import Transaction
         amount = self.quantity * self.price
         if self.trade_type == 'SELL':
             amount = -amount
