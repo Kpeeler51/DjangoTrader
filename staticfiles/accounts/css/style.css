@@ -1,0 +1,67 @@
+/* Intended for the webite that this is linked to to do most of the CSS work. */
+
+/* Basic customizations can be changed depending on website linked to */
+/* Customization for heading */
+h2 {
+    margin: 1rem;
+}
+/* Transaction history table  */
+table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+th {
+    padding: 1rem 4.25rem;
+}
+/* Balance display */
+.balance {
+    margin-bottom: 2rem;
+}
+
+/* Reset account button customization */
+.reset-button {
+    background-color: red;
+}
+
+.reset-container{
+    margin-top: 3rem;
+}
+
+/* Deposit form customization */
+.deposit-form {
+    display: inline-flex;
+    margin: 1rem;
+    align-items: center;
+}
+
+.deposit-button {
+    margin-left: 1rem;
+}
+/* Login form customization */
+.login-form, .login-form p {
+    margin: 0.25rem
+}
+
+.login-button {
+    margin: 1rem
+}
+/* Register formc customization */
+.register-container {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.register-container p{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.register-container input{
+    max-width: 500px
+}

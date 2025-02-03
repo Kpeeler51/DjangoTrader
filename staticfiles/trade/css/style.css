@@ -1,0 +1,162 @@
+/* CSS Reset */
+* {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  /* Global styling. */
+  body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1 0 auto;
+}
+/* Styling for links */
+a {
+    text-decoration: none;
+    color: #62AB37;
+}
+
+a:hover {
+    color: #68c92f
+}
+
+button {
+    padding: 0.3rem;
+    border: none;
+    cursor: pointer;
+    background-color: #62AB37;
+}
+  
+button:hover {
+    background-color: #68c92f;
+  }
+/* Navbar styling */
+nav {
+    font-family: "Open Sans", serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #62AB37;
+    height: 3rem;
+    padding: 0 1rem;
+}
+/* Logo header. */
+.logo {
+    font-size: 35px;
+}
+/* Logo hyperlink */
+.nav-logo {
+    text-decoration: none;
+    color: black;
+}
+
+.nav-logo:hover {
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-item {
+    font-size: 1.5rem;
+    margin: 0rem 3rem;
+    text-decoration: none;
+    color: black;
+}
+
+.nav-item:hover {
+    color: white;
+}
+/* Logout button is a submit button disguised as a hyperlink for security */
+.logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+/* Notifications fade in from top right of screen. */
+#notification-container {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    transform: translateX(100%);
+    transition: opacity 0.3s, transform 0.3s;
+    background-color: #62AB37;
+    padding: 10px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+/* Welcome header. */
+.welcome-header{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+/* Home page container */
+.home-container {
+    display: flex;
+    padding: 1rem;
+}
+/* Stock chart styling */
+.chart-section {
+    flex: 1;
+    min-width: 500px;
+    border: #62AB37 solid;
+}
+
+.chart-info {
+    display: inline-flex;
+}
+
+.currency {
+    float: right;
+    display: flex;
+}
+/* Portfolio styling */
+.table-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: #62AB37 solid;
+}
+
+.port-header {
+    margin:0.7rem;
+}
+
+.symbol-header {
+    margin-bottom: 1rem;
+}
+
+.price {
+    margin: 0.5rem;
+}
+/* Global table styling. Most relevant to portfolio so is kept in portfolio
+instead of global section */
+table {
+    border-collapse: collapse;
+}
+
+tr, td, th {
+    padding: 1rem;
+    border: black solid 1px;
+}
+/* Footer */
+footer {
+    background-color: #62AB37;
+    text-align: center;
+}
