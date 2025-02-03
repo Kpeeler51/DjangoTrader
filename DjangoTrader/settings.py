@@ -28,7 +28,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['0.0.0.0',
                   os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
-                  '127.0.0.1',]
+                  ]
 
 
 # Application definition
