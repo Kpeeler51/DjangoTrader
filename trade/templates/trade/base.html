@@ -42,7 +42,13 @@
         <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p>
     {% endif %}
 
-    {% block content %}
-    {% endblock %}
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; DjangoTrader 2021</p>
+    </footer>
 </body>
 </html>
