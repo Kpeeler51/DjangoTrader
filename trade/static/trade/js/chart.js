@@ -1,5 +1,8 @@
+// Function to create a chart using Chart.js
 function createChart(dates, prices, symbol, currency) {
+    // canvas context for rendering chart.
     const ctx = document.getElementById('stockChart').getContext('2d');
+    // Creates a new chart instance.
     new Chart(ctx, {
         type: 'line',
         data: {
