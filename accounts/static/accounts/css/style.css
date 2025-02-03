@@ -34,8 +34,8 @@ h2 {
     margin-left: 1rem;
 }
 
-.login-form {
-    margin: 1rem
+.login-form, .login-form p {
+    margin: 0.25rem
 }
 
 .login-button {
