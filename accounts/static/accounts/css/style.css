@@ -1,3 +1,7 @@
+h2 {
+    margin: 1rem;
+}
+
 table {
     display: flex;
     flex-direction: column;
@@ -5,11 +9,11 @@ table {
 }
 
 th {
-    padding: 1rem 2.43rem
+    padding: 1rem 4.25rem;
 }
 
-h2 {
-    margin: 1rem;
+.balance {
+    margin-bottom: 2rem;
 }
 
 .reset-button {
@@ -18,10 +22,6 @@ h2 {
 
 .reset-container{
     margin-top: 3rem;
-}
-
-.balance {
-    margin-bottom: 2rem;
 }
 
 .deposit-form {
