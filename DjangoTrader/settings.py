@@ -28,7 +28,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['0.0.0.0',
                   os.getenv('RENDER_EXTERNAL_HOSTNAME', ''),
+                  'https://djangotrader.onrender.com/',
                   ]
+
+CSRF_TRUSTED_ORIGINS = ['https://djangotrader.onrender.com/']
 
 
 # Application definition
@@ -145,3 +148,6 @@ LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
