@@ -1,13 +1,17 @@
+<!-- Inserted into "block content" in base.html  -->
 {% extends "trade/base.html" %}
+<!-- Load static files -->
 {% load static %}
 
-
+<!-- Page title -->
 {% block title %}Stock Market Graph{% endblock %}
-
+<!-- Content displayed on base.html -->
 {% block content %}
+<!--  Home page displays stock chart and portfolio. -->
 <section class="home-container">
+    <!-- Section of the website dedicated to the stock chart and currency info. -->
     <section class="chart-section">
-    
+    <!-- Form for entering and submitting stock symbol. -->
         <div class="chart-info">
             <form class="stock-form" method="get">
                 <label for="stock_symbol">Enter Stock Symbol:</label>
@@ -20,17 +24,19 @@
                 <button type="submit">Show Graph</button>
             </form>
         </div>
-
+        <!-- If an error is detected will be displayed in red text. otherwise display what currency the stock is in. -->
         {% if error %}
             <p class="currency" style="color: red;">{{ error }}</p>
         {% else %}
             <p class="currency">Currency: {{ currency }}</p>
     </div>
+    <!-- Canvas displaying stock chart. -->
         <canvas id="stockChart"></canvas>
-
+    <!-- Script creating chart. createChart imported from static/trade/js/chart.js  -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 try {
+                    // Creates chart based on data input from yahoo finance.
                     const dates = JSON.parse('{{ dates|escapejs }}');
                     const prices = JSON.parse('{{ prices|escapejs }}');
                     const symbol = '{{ symbol|escapejs }}';
@@ -44,9 +50,11 @@
         </script>
     {% endif %}
     </section>
+    <!-- Section of website dedicated to portfolio and buying stock. -->
     <section class="table-section">
-
+<!-- If user is authenticated display display stock purchase options and portfolio table -->
     {% if user.is_authenticated %}
+    <!-- Buy stock button. Displays current price and buying options -->
     <h2 class="port-header">Buy Stock</h2>
     <h3 class="symbol-header">{{symbol}}</h3>
     <p class="price">Current Price: {{ currency }} {{ current_price }}</p>
@@ -67,8 +75,10 @@
         <button type="submit">Buy Stock</button>
     </form>
 
+    <!-- Portfolio table displaying current positions and their values -->
     <h2 class="port-header">Your Portfolio</h2>
         <table class="portfolio">
+            <!-- Portfolio table header -->
             <thead>
                 <tr>
                     <th>Symbol</th>
@@ -80,6 +90,7 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- for each stock position will create another table display containing stock info -->
                 {% for position in portfolio %}
                     <tr class="port-info">
                         <td>{{ position.symbol }}</td>
@@ -87,6 +98,7 @@
                         <td>${{ position.current_price }}</td>
                         <td>${{ position.total_value }}</td>
                         <td>
+                            <!-- form used to quickly buy more of already owned stock -->
                             <form 
                             id="buy-form-{{ position.symbol }}" 
                             method="post"
@@ -106,6 +118,7 @@
                             </form>
                         </td>
                         <td>
+                            <!-- form used to quickly sell more of already owned stock -->
                             <form 
                             id="sell-form-{{ position.symbol }}" 
                             method="post" 
@@ -129,24 +142,28 @@
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Total portfolio value compared to total account value. -->
+         <!-- Allows user to see value of all stock owned. -->
         <p>
             Total Portfolio Value: 
             $<span id="portfolio-value">{{ portfolio_value }}</span></p>
         <p>
             Total Account Value (Balance + Portfolio): 
             $<span id="total-account-value">{{ total_value }}</span></p>
-
+            <!-- Script to initiate portfolio data handling. static/trade/js/portfolio.js -->
     <script src="{% static 'trade/js/portfolio.js' %}"></script>
 {% endif %}
     </section>
 </section>
-
+<!-- Javascript imports to display charts. chartjs used to format chart. -->
+ <!-- Placed at the bottom of the page to help loading time and priority. -->
 <script 
 src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script 
 src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="{% static 'chart.js' %}"></script>
     
+<!-- Javascript to handle portfolio data. static/trade/js/portfolio.js -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         initializePortfolioJS(

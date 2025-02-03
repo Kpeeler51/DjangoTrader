@@ -1,52 +1,67 @@
+<!-- Load static files. -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}DjangoTrader{% endblock %}</title>
+    <!-- CSS link -->
     <link href="{% static 'trade/css/style.css' %}" rel="stylesheet" type="text/css">
+    <!-- Google Fonts Link -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet">
+
 </head>
+
 <body>
+    <!-- Container for notification messages. -->
     <div id="notification-container"></div>
-    
+    <!-- Navbar -->
     <nav class="navbar">
-        <h1 class="logo"> <a class="nav-logo" href="{% url 'home' %}">DjangoTrader</a></h1>
+        <h1 class="logo">
+            <a class="nav-logo" href="{% url 'home' %}">DjangoTrader</a>
+        </h1>
         <div class="nav-links">
             <a class="nav-item" href="{% url 'home' %}">Home</a>
+            <!-- Balance, funds, and logout button only shown if user is authenticated and logged in. -->
             {% if user.is_authenticated %}
                 <a class="nav-item" href="{% url 'balance' %}">Account Balance</a>
                 <a class="nav-item" href="{% url 'deposit' %}">Deposit Funds</a>
+                <!-- Logout button. used as a post type submit for django security requirements -->
                 <form class="nav-item" method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button class="logout-button nav-item" type="submit">Logout</button>
                 </form>
             {% else %}
+            <!-- Login button only shows if user is not logged in. -->
             <a class="nav-item" href="{% url 'login' %}">Login</a>
             {% endif %}
     </div>
     </nav>
     
+    <!-- Welcome and user balance is displayed if logged in. -->
     {% if user.is_authenticated %}
         <h3 class="welcome-header">Welcome, {{ user.username }}!</h3>
         {% if user.profile %}
             <p id="user-balance">Balance: ${{ user.profile.balance }}</p>
         {% endif %}
         </p>
+        <!-- if user is not logged in a log in and register button is displayed. -->
     {% else %}
         <h3 class="welcome-header"><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a> to start trading.</p> </h3>
     {% endif %}
 
+    <!-- Main website content. extended from active URL. starts at home.html -->
     <main class="main-content">
         {% block content %}
         {% endblock %}
     </main>
 
+    <!-- Footer -->
     <footer>
         <p>&copy; DjangoTrader 2025</p>
     </footer>
