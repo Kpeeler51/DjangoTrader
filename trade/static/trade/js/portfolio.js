@@ -1,13 +1,16 @@
+// Function handles form submissions for buy/sell actions.
 function handleFormSubmit(event) {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
 
+    // Convert symbol to uppercase to prevent case sensitivity.
     const symbolInput = formData.get('symbol');
     if (symbolInput) {
         formData.set('symbol', symbolInput.toUpperCase());
     }
 
+    // send form data to server using fetch API.
     fetch(form.action, {
         method: 'POST',
         body: formData,
@@ -18,6 +21,7 @@ function handleFormSubmit(event) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Update portfolio data.
             const portfolio = data.portfolio.map(position => ({
                 ...position,
                 current_price: parseFloat(position.current_price),
@@ -26,7 +30,7 @@ function handleFormSubmit(event) {
             const portfolioValue = parseFloat(data.portfolio_value);
             const totalValue = parseFloat(data.total_value);
             const balance = parseFloat(data.balance);
-
+            // Update UI with updated data.
             updatePortfolio(portfolio, portfolioValue, totalValue);
             updateBalance(balance);
             showNotification(data.message, 'success');
@@ -41,7 +45,7 @@ function handleFormSubmit(event) {
 
     return false;
 }
-
+// Function to display notifications.
 function showNotification(message, type = 'success') {
     const container = document.getElementById('notification-container');
     const notification = document.createElement('div');
@@ -53,7 +57,7 @@ function showNotification(message, type = 'success') {
     notification.offsetHeight;
 
     notification.classList.add('show');
-
+//  Notifications appear in corner of screen. then disappear after 5 seconds.
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
@@ -61,6 +65,7 @@ function showNotification(message, type = 'success') {
         }, 300);
     }, 5000);
 }
+// Function updates user balance display.
 function updateBalance(balance) {
     const balanceValue = parseFloat(balance);
     const balanceElement = document.querySelector('#user-balance');
@@ -71,11 +76,11 @@ function updateBalance(balance) {
     }
 }
 
-
+// Function updates users portfolio tables
 function updatePortfolio(portfolio, portfolioValue, totalValue) {
     const tbody = document.querySelector('table tbody');
     tbody.innerHTML = '';
-
+    // For each position in portfolio, create a new row in the table.
     portfolio.forEach(position => {
         const currentPrice = parseFloat(position.current_price);
         const totalPositionValue = parseFloat(position.total_value);
@@ -114,11 +119,11 @@ function updatePortfolio(portfolio, portfolioValue, totalValue) {
         form.addEventListener('submit', (event) => handleFormSubmit(event, form.id.startsWith('buy') ? 'buy' : 'sell'));
     });
 }
-
+// Global variables for URLs and CSRF token
 let buyStockUrl = '';
 let sellStockUrl = '';
 let csrfToken = '';
-
+// Function to initialize the portfolio JavaScript
 function initializePortfolioJS(buyUrl, sellUrl, csrf) {
     buyStockUrl = buyUrl;
     sellStockUrl = sellUrl;
