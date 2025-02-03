@@ -11,7 +11,12 @@
         <div class="chart-info">
             <form class="stock-form" method="get">
                 <label for="stock_symbol">Enter Stock Symbol:</label>
-                <input type="text" id="stock_symbol" name="symbol" value="{{ symbol }}">
+                <input
+                 type="text" 
+                 id="stock_symbol" 
+                 name="symbol" 
+                 value="{{ symbol }}" 
+                 required>
                 <button type="submit">Show Graph</button>
             </form>
         </div>
@@ -47,8 +52,18 @@
     <p class="price">Current Price: {{ currency }} {{ current_price }}</p>
     <form id="primarybuy" method="post" action="{% url 'buy_stock' %}">
         {% csrf_token %}
-        <input type="hidden" name="symbol" value="{{ symbol }}" required>
-        <input type="number" name="quantity" min="1" placeholder="Quantity" required>
+        <input 
+        type="hidden" 
+        name="symbol" 
+        value="{{ symbol }}" 
+        required>
+        <input 
+        type="number" 
+        name="quantity" 
+        min="1" 
+        placeholder="Quantity" 
+        required 
+        aria-label="Quantity">
         <button type="submit">Buy Stock</button>
     </form>
 
@@ -72,18 +87,41 @@
                         <td>${{ position.current_price }}</td>
                         <td>${{ position.total_value }}</td>
                         <td>
-                            <form id="buy-form-{{ position.symbol }}" method="post" action="{% url 'buy_stock' %}">
+                            <form 
+                            id="buy-form-{{ position.symbol }}" 
+                            method="post"
+                            action="{% url 'buy_stock' %}">
                                 {% csrf_token %}
-                                <input type="hidden" name="symbol" value="{{ position.symbol }}">
-                                <input type="number" name="quantity" min="1" required>
+                                <input 
+                                type="hidden" 
+                                name="symbol" 
+                                value="{{ position.symbol }}">
+                                <input 
+                                type="number" 
+                                name="quantity"
+                                min="1" 
+                                required 
+                                aria-label="Buy quantity for {{ position.symbol }}">
                                 <button type="submit">Buy</button>
                             </form>
                         </td>
                         <td>
-                            <form id="sell-form-{{ position.symbol }}" method="post" action="{% url 'sell_stock' %}">
+                            <form 
+                            id="sell-form-{{ position.symbol }}" 
+                            method="post" 
+                            action="{% url 'sell_stock' %}">
                                 {% csrf_token %}
-                                <input type="hidden" name="symbol" value="{{ position.symbol }}">
-                                <input type="number" name="quantity" min="1" max="{{ position.quantity }}" required>
+                                <input 
+                                type="hidden" 
+                                name="symbol" 
+                                value="{{ position.symbol }}">
+                                <input 
+                                type="number" 
+                                name="quantity" 
+                                min="1" 
+                                max="{{ position.quantity }}" 
+                                required 
+                                aria-label="Sell quantity for {{ position.symbol }}">
                                 <button type="submit">Sell</button>
                             </form>
                         </td>
@@ -91,16 +129,22 @@
                 {% endfor %}
             </tbody>
         </table>
-        <p>Total Portfolio Value: $<span id="portfolio-value">{{ portfolio_value }}</span></p>
-        <p>Total Account Value (Balance + Portfolio): $<span id="total-account-value">{{ total_value }}</span></p>
+        <p>
+            Total Portfolio Value: 
+            $<span id="portfolio-value">{{ portfolio_value }}</span></p>
+        <p>
+            Total Account Value (Balance + Portfolio): 
+            $<span id="total-account-value">{{ total_value }}</span></p>
 
     <script src="{% static 'trade/js/portfolio.js' %}"></script>
 {% endif %}
     </section>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script 
+src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script 
+src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="{% static 'chart.js' %}"></script>
     
 <script>
