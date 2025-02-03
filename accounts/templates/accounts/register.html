@@ -1,9 +1,17 @@
-{% extends "trade/base.html" %}
+<!-- Intended to extend base attached website -->
+{% extends 'trade/base.html' %}
+
+<!-- Load static file -->
 {% load static %}
 
+<!-- Page Title -->
+{% block title %} Logging Out {% endblock %}
+
 {% block content %}
+<!-- CSS link -->
 <link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
 
+<!-- Register form -->
 <section class="register-container">
     <h2>Register for DjangoTrader</h2>
     <form class="register-form" method="post">
@@ -11,6 +19,7 @@
         {{ form.as_p }}
         <button type="submit">Register</button>
     </form>
+    <!-- Login button incase user has an account -->
     <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
 </section>
 {% endblock %}

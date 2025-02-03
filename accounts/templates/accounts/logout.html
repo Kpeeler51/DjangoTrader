@@ -1,18 +1,24 @@
-{% extends "trade/base.html" %}
+<!-- Intended to extend base attached website -->
+{% extends 'trade/base.html' %}
+
+<!-- Load static file -->
 {% load static %}
 
+<!-- Title for page -->
 {% block title %} Logging Out {% endblock %}
 
 {% block content %}
+<!-- CSS Link -->
 <link href="{% static 'accounts/css/style.css' %}" rel="stylesheet" type="text/css">
 
+<!-- Informs the user they have been logged out. -->
 <section>
     <h2>You have been logged out</h2>
     <p>Redirecting to home page...</p>
 </section>
 
 <script>
-    // Wait for 2 seconds (2000 milliseconds) before redirecting
+    // Wait for 2 seconds before redirecting
     setTimeout(function() {
         window.location.href = "{% url 'home' %}";
     }, 2000);

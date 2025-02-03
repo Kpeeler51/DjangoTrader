@@ -1,14 +1,20 @@
-{% extends "trade/base.html" %}
+<!-- Intended to extend base attached website -->
+{% extends 'trade/base.html' %}
+
+<!-- Load static file -->
 {% load static %}
 
+<!-- Title for page -->
 {% block title %}Deposit Funds{% endblock %}
 
 {% block content %}
+<!-- CSS link -->
 <link 
 href="{% static 'accounts/css/style.css' %}" 
 rel="stylesheet" 
 type="text/css">
 
+<!-- User inputs deposit to be added to balance. -->
 <section>
     <h2>Deposit Funds</h2>
     <p class="balance">Current Balance: ${{ balance }}</p>

@@ -1,20 +1,29 @@
+<!-- Intended to extend base attached website -->
 {% extends 'trade/base.html' %}
+
+<!-- Load static file -->
 {% load static %}
 
+<!-- Title for page -->
 {% block title %}Account Balance and Transactions{% endblock %}
+
 {% block content %}
+<!-- Link static/accounts/css/style.css -->
     <link 
     href="{% static 'accounts/css/style.css' %}" 
     rel="stylesheet" 
     type="text/css">
-
+<!-- account balance display. -->
     <header>
         <h2>Account Balance</h2>
         <p>Your current balance is: ${{ balance }}</p>
     </header>
-
+    
+<!-- Displays user transaction history. -->
     <section>
+        <!-- Table containing user balance history -->
         <h3>Transaction History</h3>
+        <!-- If there are transactions a table will be displayed. -->
         {% if transactions %}
             <table class="history-table">
                 <thead>
@@ -58,7 +67,7 @@
             <p>No transactions found.</p>
         {% endif %}
 
-
+            <!-- Account reset -->
         <div class="reset-container">
             <form action="{% url 'reset_account' %}" method="post">
                 {% csrf_token %}
