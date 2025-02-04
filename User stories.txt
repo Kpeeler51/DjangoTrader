@@ -1,0 +1,7 @@
+As a user, I want to be able to see stock prices for select markets so that I can make informed trading decisions.
+
+As a user I want to be able to keep a balance and history of funds so that I can keep track of my spending.
+
+As a user I want to be able to buy and sell shares of stocks so that I can invest or liquedate holding as I see fit.
+
+{% block title %}Login - DjangoTrader{% endblock %}
