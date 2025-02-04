@@ -31,7 +31,7 @@ Demo website hosted at <https://djangotrader.onrender.com>
 * Return to home page and purchase desired stock. Portfolio will be updated accordingly
 * Use portfolio buttons to quickly buy or sell owned stock.
 
-### To run locally:
+### To run locally
 
 * Pull the source code from github using git pull
 * Running the build.sh script in the terminal will install requirements and migrate database.
