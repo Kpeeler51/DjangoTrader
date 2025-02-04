@@ -24,6 +24,7 @@ Used to learn and display knowledge of Python and Django.
 Source code hosted at <https://github.com/Kpeeler51/DjangoTrader>
 
 Demo website hosted at <https://djangotrader.onrender.com>
+Demo website hosted on a free account so it will be slow to load and boot up after inactivity.
 
 * enter homepage and input desired stock symbol for information
 * Click register button and input user information to register for an account.
